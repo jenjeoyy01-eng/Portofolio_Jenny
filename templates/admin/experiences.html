@@ -1,0 +1,45 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Pengalaman | Admin Jenny{% endblock %}
+{% block content %}
+<div class="page-heading"><div><span class="eyebrow">Timeline</span><h1>Pengalaman</h1></div></div>
+<section class="admin-panel form-panel">
+    <div class="form-section-title"><h2>Tambah Pengalaman</h2></div>
+    <form method="post" enctype="multipart/form-data" class="form-grid two-columns compact-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Perusahaan / Organisasi<input type="text" name="company" required></label>
+        <label>Posisi / Peran<input type="text" name="role" required></label>
+        <label>Tahun Mulai<input type="text" name="start_year" placeholder="2024" required></label>
+        <label>Tahun Selesai<input type="text" name="end_year" value="Present"></label>
+        <label>Ikon<input type="text" name="icon" value="bi-flower1"></label>
+        <label>Urutan<input type="number" name="sort_order" value="0"></label>
+        <label class="full-column">Deskripsi<textarea name="description" rows="4"></textarea></label>
+        <label class="full-column">Gambar<input type="file" name="image" accept="image/png,image/jpeg,image/webp"></label>
+        <div class="form-actions"><button class="admin-button" type="submit"><i class="bi bi-plus"></i> Tambahkan</button></div>
+    </form>
+</section>
+<div class="admin-list-grid one-column">
+    {% for experience in experiences %}
+    <article class="admin-panel experience-admin-card">
+        <div class="admin-thumb">{% if experience.image_url %}<img src="{{ experience.image_url }}" alt="{{ experience.company }}">{% else %}<i class="bi bi-image"></i>{% endif %}</div>
+        <div class="experience-admin-info"><span>{{ experience.start_year }} — {{ experience.end_year }}</span><h3>{{ experience.company }}</h3><h4>{{ experience.role }}</h4><p>{{ experience.description }}</p></div>
+        <details><summary>Edit</summary>
+            <form method="post" enctype="multipart/form-data" action="{{ url_for('experiences_admin.update', experience_id=experience.id) }}" class="form-grid two-columns compact-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label>Perusahaan<input type="text" name="company" value="{{ experience.company }}" required></label>
+                <label>Posisi<input type="text" name="role" value="{{ experience.role }}" required></label>
+                <label>Tahun Mulai<input type="text" name="start_year" value="{{ experience.start_year }}" required></label>
+                <label>Tahun Selesai<input type="text" name="end_year" value="{{ experience.end_year }}"></label>
+                <label>Ikon<input type="text" name="icon" value="{{ experience.icon }}"></label>
+                <label>Urutan<input type="number" name="sort_order" value="{{ experience.sort_order }}"></label>
+                <label class="full-column">Deskripsi<textarea name="description" rows="4">{{ experience.description }}</textarea></label>
+                <label class="full-column">Ganti gambar<input type="file" name="image" accept="image/png,image/jpeg,image/webp"></label>
+                <div class="form-actions"><button class="admin-button small" type="submit">Simpan</button></div>
+            </form>
+        </details>
+        <form method="post" action="{{ url_for('experiences_admin.delete', experience_id=experience.id) }}" data-confirm="Hapus pengalaman ini?">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="danger-button" type="submit"><i class="bi bi-trash"></i> Hapus</button>
+        </form>
+    </article>
+    {% else %}<p class="empty-state">Belum ada pengalaman.</p>{% endfor %}
+</div>
+{% endblock %}

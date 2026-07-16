@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Website portofolio Jenny Ananda Prasetya">
+    <title>{% block title %}Jenny. | Portofolio{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header class="site-header" id="top">
+        <nav class="navbar container" aria-label="Navigasi utama">
+           <a href="/admin/login"class="brand"title="Login Admin"aria-label="Masuk ke halaman login admin">Jenny.</a>
+
+            <div class="nav-actions">
+                <a href="{{ url_for('main.home') }}#home" class="nav-link">Home</a>
+
+                <div class="flower-menu">
+                    <button
+                        class="flower-menu-toggle"
+                        type="button"
+                        aria-expanded="false"
+                        aria-controls="flower-menu-dropdown"
+                        aria-label="Buka menu navigasi"
+                    >
+                        <i class="bi bi-flower2" aria-hidden="true"></i>
+                    </button>
+
+                    <div class="flower-dropdown" id="flower-menu-dropdown">
+                        <a href="{{ url_for('main.home') }}#about">
+                            <i class="bi bi-person-heart" aria-hidden="true"></i>
+                            <span>Tentang</span>
+                        </a>
+                        <a href="{{ url_for('main.home') }}#skills">
+                            <i class="bi bi-stars" aria-hidden="true"></i>
+                            <span>Keahlian</span>
+                        </a>
+                        <a href="{{ url_for('main.home') }}#experience">
+                            <i class="bi bi-briefcase" aria-hidden="true"></i>
+                            <span>Pengalaman</span>
+                        </a>
+                        <a href="{{ url_for('main.home') }}#projects">
+                            <i class="bi bi-grid" aria-hidden="true"></i>
+                            <span>Proyek Saya</span>
+                        </a>
+                        <a href="{{ url_for('main.home') }}#contact">
+                            <i class="bi bi-envelope-heart" aria-hidden="true"></i>
+                            <span>Kontak</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="flash-stack container" aria-live="polite">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">
+                    <span>{{ message }}</span>
+                    <button type="button" class="flash-close" aria-label="Tutup">&times;</button>
+                </div>
+            {% endfor %}
+        {% endwith %}
+    </div>
+
+    <main>{% block content %}{% endblock %}</main>
+
+    <footer class="site-footer">
+    <div class="container footer-inner">
+        <p> &copy; {{ current_year }} Jenny. Dibuat dengan perhatian pada setiap detail.</p>
+    </div>
+</footer>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

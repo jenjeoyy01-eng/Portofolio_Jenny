@@ -1,0 +1,31 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Profil | Admin Jenny{% endblock %}
+{% block content %}
+<div class="page-heading"><div><span class="eyebrow">Konten utama</span><h1>Profil</h1></div></div>
+<form class="admin-panel form-panel" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-section-title"><h2>Identitas Utama</h2></div>
+    <div class="form-grid two-columns">
+        <label>Sapaan<input type="text" name="greeting" value="{{ profile.greeting }}" required></label>
+        <label>Nama Lengkap<input type="text" name="full_name" value="{{ profile.full_name }}" required></label>
+        <label class="full-column">Judul / Profesi<input type="text" name="title" value="{{ profile.title }}" required></label>
+        <label class="full-column">Tentang Saya<textarea name="about_text" rows="6">{{ profile.about_text }}</textarea></label>
+    </div>
+    <div class="form-section-title"><h2>Foto Profil</h2></div>
+    <div class="upload-row">
+        <div class="image-preview large-preview">
+            <img id="photo-preview" src="{{ profile.photo_url or url_for('static', filename='images/hero-default.png') }}" alt="Preview foto">
+        </div>
+        <label class="file-label">Pilih Foto<input type="file" name="photo" accept="image/png,image/jpeg,image/webp" data-preview-target="#photo-preview"><span><i class="bi bi-cloud-arrow-up"></i> Pilih gambar baru</span></label>
+    </div>
+    <div class="form-section-title"><h2>Kontak & Tautan</h2></div>
+    <div class="form-grid two-columns">
+        <label>Email<input type="email" name="email" value="{{ profile.email }}"></label>
+        <label>Nomor Telepon<input type="text" name="phone" value="{{ profile.phone }}"></label>
+        <label>Lokasi<input type="text" name="location" value="{{ profile.location }}"></label>
+        <label>LinkedIn<input type="url" name="linkedin_url" value="{{ profile.linkedin_url }}" placeholder="https://linkedin.com/in/..."></label>
+        <label>Instagram<input type="url" name="instagram_url" value="{{ profile.instagram_url }}" placeholder="https://instagram.com/..."></label>
+    </div>
+    <div class="form-actions"><button class="admin-button" type="submit"><i class="bi bi-check2"></i> Simpan Profil</button></div>
+</form>
+{% endblock %}

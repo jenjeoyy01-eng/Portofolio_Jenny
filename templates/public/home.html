@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Jenny. | Portofolio{% endblock %}
+{% block content %}
+<section id="home" class="hero section-floral">
+    <div class="container hero-grid">
+        <div class="hero-copy reveal">
+            <p class="hero-greeting">{{ profile.greeting if profile else 'Halo! Saya Jenny' }}</p>
+            <h1>{{ profile.full_name if profile else 'Jenny Ananda Prasetya' }}</h1>
+            <p class="hero-title">{{ profile.title if profile else 'Mahasiswa S1 Sistem Informasi Universitas Kristen Satya Wacana' }}</p>
+            <a class="button button-primary" href="#projects">Lihat Proyek Saya</a>
+        </div>
+        <div class="hero-visual reveal" aria-label="Foto profil Jenny">
+            <div class="hero-glow"></div>
+            {% if profile and profile.photo_url %}
+                <img src="{{ profile.photo_url }}" alt="Foto {{ profile.full_name }}" class="hero-photo">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/hero-default.png') }}" alt="Ilustrasi ruang kerja portofolio" class="hero-photo hero-photo-composite">
+            {% endif %}
+            <i class="bi bi-flower1 hero-decoration flower-top"></i>
+            <i class="bi bi-heart-fill hero-decoration flower-bottom"></i>
+        </div>
+    </div>
+</section>
+
+{% include "public/about.html" %}
+{% include "public/skills.html" %}
+{% include "public/experience.html" %}
+{% include "public/projects.html" %}
+{% include "public/contact.html" %}
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/contact.js') }}" defer></script>{% endblock %}
