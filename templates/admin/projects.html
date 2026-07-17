@@ -1,0 +1,47 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Proyek | Admin Jenny{% endblock %}
+{% block content %}
+<div class="page-heading"><div><span class="eyebrow">Karya</span><h1>Proyek</h1></div></div>
+<section class="admin-panel form-panel">
+    <div class="form-section-title"><h2>Tambah Proyek</h2></div>
+    <form method="post" enctype="multipart/form-data" class="form-grid two-columns compact-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Judul Proyek<input type="text" name="title" required></label>
+        <label>Kategori<input type="text" name="category" value="Web Design"></label>
+        <label>Teknologi<input type="text" name="technologies" placeholder="Flask, TiDB, Cloudinary"></label>
+        <label>Urutan<input type="number" name="sort_order" value="0"></label>
+        <label>URL Proyek<input type="url" name="project_url" placeholder="https://..."></label>
+        <label>URL GitHub<input type="url" name="github_url" placeholder="https://github.com/..."></label>
+        <label class="full-column">Deskripsi<textarea name="description" rows="4"></textarea></label>
+        <label class="full-column">Gambar<input type="file" name="image" accept="image/png,image/jpeg,image/webp"></label>
+        <label class="checkbox-label"><input type="checkbox" name="is_featured" checked> Tampilkan di website</label>
+        <div class="form-actions"><button class="admin-button" type="submit"><i class="bi bi-plus"></i> Tambahkan</button></div>
+    </form>
+</section>
+<div class="admin-list-grid">
+    {% for project in projects %}
+    <article class="admin-panel project-admin-card">
+        <img src="{{ project.image_url or url_for('static', filename='images/project-default.png') }}" alt="{{ project.title }}">
+        <div><span>{{ project.category }}</span><h3>{{ project.title }}</h3><p>{{ project.description }}</p><small>{{ project.technologies }}</small></div>
+        <details><summary>Edit Proyek</summary>
+            <form method="post" enctype="multipart/form-data" action="{{ url_for('projects_admin.update', project_id=project.id) }}" class="form-grid two-columns compact-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label>Judul<input type="text" name="title" value="{{ project.title }}" required></label>
+                <label>Kategori<input type="text" name="category" value="{{ project.category }}"></label>
+                <label>Teknologi<input type="text" name="technologies" value="{{ project.technologies }}"></label>
+                <label>Urutan<input type="number" name="sort_order" value="{{ project.sort_order }}"></label>
+                <label>URL Proyek<input type="url" name="project_url" value="{{ project.project_url }}"></label>
+                <label>URL GitHub<input type="url" name="github_url" value="{{ project.github_url }}"></label>
+                <label class="full-column">Deskripsi<textarea name="description" rows="4">{{ project.description }}</textarea></label>
+                <label class="full-column">Ganti gambar<input type="file" name="image" accept="image/png,image/jpeg,image/webp"></label>
+                <label class="checkbox-label"><input type="checkbox" name="is_featured" {{ 'checked' if project.is_featured else '' }}> Tampilkan</label>
+                <div class="form-actions"><button class="admin-button small" type="submit">Simpan</button></div>
+            </form>
+        </details>
+        <form method="post" action="{{ url_for('projects_admin.delete', project_id=project.id) }}" data-confirm="Hapus proyek ini?">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="danger-button" type="submit"><i class="bi bi-trash"></i> Hapus</button>
+        </form>
+    </article>
+    {% else %}<p class="empty-state">Belum ada proyek.</p>{% endfor %}
+</div>
+{% endblock %}

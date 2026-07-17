@@ -1,0 +1,18 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Pesan | Admin Jenny{% endblock %}
+{% block content %}
+<div class="page-heading"><div><span class="eyebrow">Inbox</span><h1>Pesan Kontak</h1></div></div>
+<div class="message-list full-list">
+    {% for message in messages %}
+    <article class="admin-panel message-card {{ '' if message.is_read else 'unread' }}">
+        <div class="message-card-top"><span class="avatar">{{ message.name[:1]|upper }}</span><div><h3>{{ message.name }}</h3><a href="mailto:{{ message.email }}">{{ message.email }}</a></div><time>{{ message.created_at.strftime('%d %b %Y, %H:%M') }}</time></div>
+        <div class="message-subject"><strong>{{ message.subject }}</strong><span class="status-chip">Email: {{ message.email_status }}</span></div>
+        <p class="message-content">{{ message.message }}</p>
+        <div class="message-actions">
+            <form method="post" action="{{ url_for('admin.toggle_message_read', message_id=message.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="secondary-button" type="submit"><i class="bi {{ 'bi-envelope' if message.is_read else 'bi-envelope-open' }}"></i> {{ 'Tandai belum dibaca' if message.is_read else 'Tandai dibaca' }}</button></form>
+            <form method="post" action="{{ url_for('admin.delete_message', message_id=message.id) }}" data-confirm="Hapus pesan ini?"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="danger-button" type="submit"><i class="bi bi-trash"></i> Hapus</button></form>
+        </div>
+    </article>
+    {% else %}<p class="empty-state">Belum ada pesan.</p>{% endfor %}
+</div>
+{% endblock %}

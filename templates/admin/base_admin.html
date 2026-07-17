@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Admin Jenny{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-body">
+    <aside class="admin-sidebar" id="admin-sidebar">
+        <a class="admin-brand" href="{{ url_for('admin.dashboard') }}">Jenny.</a>
+        <p class="admin-caption">Portfolio Manager</p>
+        <nav class="admin-nav">
+            <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.dashboard' else '' }}"><i class="bi bi-grid"></i> Dashboard</a>
+            <a href="{{ url_for('profile.edit') }}" class="{{ 'active' if request.blueprint == 'profile' else '' }}"><i class="bi bi-person"></i> Profil</a>
+            <a href="{{ url_for('skills_admin.index') }}" class="{{ 'active' if request.blueprint == 'skills_admin' else '' }}"><i class="bi bi-stars"></i> Keahlian</a>
+            <a href="{{ url_for('experiences_admin.index') }}" class="{{ 'active' if request.blueprint == 'experiences_admin' else '' }}"><i class="bi bi-briefcase"></i> Pengalaman</a>
+            <a href="{{ url_for('projects_admin.index') }}" class="{{ 'active' if request.blueprint == 'projects_admin' else '' }}"><i class="bi bi-folder"></i> Proyek</a>
+            <a href="{{ url_for('admin.messages') }}" class="{{ 'active' if request.endpoint == 'admin.messages' else '' }}"><i class="bi bi-envelope"></i> Pesan</a>
+        </nav>
+        <div class="sidebar-bottom">
+            <a href="{{ url_for('main.home') }}" target="_blank"><i class="bi bi-box-arrow-up-right"></i> Lihat Website</a>
+            <form action="{{ url_for('auth.logout') }}" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit"><i class="bi bi-box-arrow-left"></i> Keluar</button>
+            </form>
+        </div>
+    </aside>
+
+    <div class="admin-shell">
+        <header class="admin-topbar">
+            <button type="button" class="sidebar-toggle" aria-label="Buka menu"><i class="bi bi-list"></i></button>
+            <div>
+                <p>Selamat datang,</p>
+                <strong>{{ current_user.name }}</strong>
+            </div>
+        </header>
+        <main class="admin-main">
+            <div class="admin-flashes">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% for category, message in messages %}
+                        <div class="admin-alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endwith %}
+            </div>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

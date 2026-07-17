@@ -1,0 +1,41 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Keahlian | Admin Jenny{% endblock %}
+{% block content %}
+<div class="page-heading"><div><span class="eyebrow">Konten</span><h1>Keahlian</h1></div></div>
+<section class="admin-panel form-panel">
+    <div class="form-section-title"><h2>Tambah Keahlian</h2></div>
+    <form method="post" class="form-grid four-columns compact-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Nama<input type="text" name="name" required></label>
+        <label>Ikon<input type="text" name="icon" value="bi-stars"></label>
+        <label>Aksen<select name="accent"><option value="pink">Pink</option><option value="green">Hijau</option></select></label>
+        <label>Urutan<input type="number" name="sort_order" value="0"></label>
+        <label class="full-column">Deskripsi<textarea name="description" rows="3"></textarea></label>
+        <label class="checkbox-label"><input type="checkbox" name="is_active" checked> Tampilkan di website</label>
+        <div class="form-actions"><button class="admin-button" type="submit"><i class="bi bi-plus"></i> Tambahkan</button></div>
+    </form>
+</section>
+<div class="admin-list-grid">
+    {% for skill in skills %}
+    <article class="admin-panel item-card">
+        <div class="item-card-heading"><span class="item-icon"><i class="bi {{ skill.icon }}"></i></span><div><h3>{{ skill.name }}</h3><p>Urutan {{ skill.sort_order }} · {{ 'Aktif' if skill.is_active else 'Nonaktif' }}</p></div></div>
+        <p>{{ skill.description }}</p>
+        <details><summary>Edit Keahlian</summary>
+            <form method="post" action="{{ url_for('skills_admin.update', skill_id=skill.id) }}" class="form-grid two-columns compact-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label>Nama<input type="text" name="name" value="{{ skill.name }}" required></label>
+                <label>Ikon<input type="text" name="icon" value="{{ skill.icon }}"></label>
+                <label>Aksen<select name="accent"><option value="pink" {{ 'selected' if skill.accent == 'pink' else '' }}>Pink</option><option value="green" {{ 'selected' if skill.accent == 'green' else '' }}>Hijau</option></select></label>
+                <label>Urutan<input type="number" name="sort_order" value="{{ skill.sort_order }}"></label>
+                <label class="full-column">Deskripsi<textarea name="description" rows="3">{{ skill.description }}</textarea></label>
+                <label class="checkbox-label"><input type="checkbox" name="is_active" {{ 'checked' if skill.is_active else '' }}> Tampilkan</label>
+                <div class="form-actions"><button class="admin-button small" type="submit">Simpan</button></div>
+            </form>
+        </details>
+        <form method="post" action="{{ url_for('skills_admin.delete', skill_id=skill.id) }}" data-confirm="Hapus keahlian ini?">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="danger-button" type="submit"><i class="bi bi-trash"></i> Hapus</button>
+        </form>
+    </article>
+    {% else %}<p class="empty-state">Belum ada keahlian.</p>{% endfor %}
+</div>
+{% endblock %}

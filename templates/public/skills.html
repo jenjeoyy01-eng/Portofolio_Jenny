@@ -1,0 +1,22 @@
+<section class="skills-section" id="skills">
+    <div class="container">
+        <div class="section-intro reveal">
+            <span class="section-kicker">Skill</span>
+            <h2 class="section-heading dark-heading">Keahlian</h2>
+            <span class="heading-line"></span>
+        </div>
+        <div class="skills-grid">
+            {% for skill in skills %}
+                <article class="skill-card reveal">
+                    <div class="skill-icon {{ 'green' if skill.accent == 'green' else 'pink' }}">
+                        <i class="bi {{ skill.icon }}"></i>
+                    </div>
+                    <h3>{{ skill.name }}</h3>
+                    <p>{{ skill.description }}</p>
+                </article>
+            {% else %}
+                <p class="empty-public">Keahlian akan segera ditambahkan.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>

@@ -1,0 +1,1 @@
+"""Service eksternal aplikasi."""

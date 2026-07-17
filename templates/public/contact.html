@@ -1,0 +1,33 @@
+<section class="contact-section section-floral" id="contact">
+    <div class="container">
+        <div class="section-intro reveal">
+            <span class="section-kicker">Kontak</span>
+            <h2 class="section-heading">Hubungi Saya</h2>
+            <p class="section-subtitle">Punya ide, proyek, atau ingin berdiskusi? Kirimkan pesan melalui form berikut.</p>
+        </div>
+        <div class="contact-layout">
+            <div class="contact-info reveal">
+                <h3>Mari membuat sesuatu yang bermakna.</h3>
+                <p>Saya terbuka untuk diskusi proyek akademik, pengembangan website, desain antarmuka, dan kolaborasi kreatif.</p>
+                <div class="contact-list">
+                    {% if profile and profile.email %}<a href="mailto:{{ profile.email }}"><i class="bi bi-envelope"></i><span>{{ profile.email }}</span></a>{% endif %}
+                    {% if profile and profile.phone %}<a href="tel:{{ profile.phone }}"><i class="bi bi-telephone"></i><span>{{ profile.phone }}</span></a>{% endif %}
+                    {% if profile and profile.location %}<span><i class="bi bi-geo-alt"></i><span>{{ profile.location }}</span></span>{% endif %}
+                </div>
+                <div class="social-links">
+                    {% if profile and profile.github_url %}<a href="{{ profile.github_url }}" aria-label="GitHub" target="_blank" rel="noopener"><i class="bi bi-github"></i></a>{% endif %}
+                    {% if profile and profile.linkedin_url %}<a href="{{ profile.linkedin_url }}" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="bi bi-linkedin"></i></a>{% endif %}
+                    {% if profile and profile.instagram_url %}<a href="{{ profile.instagram_url }}" aria-label="Instagram" target="_blank" rel="noopener"><i class="bi bi-instagram"></i></a>{% endif %}
+                </div>
+            </div>
+            <form class="contact-form reveal" action="{{ url_for('contact.send_message') }}" method="post" id="contact-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label>Nama<input type="text" name="name" placeholder="Nama Anda" maxlength="120" required></label>
+                <label>Email<input type="email" name="email" placeholder="Email Anda" maxlength="190" required></label>
+                <label>Subjek<input type="text" name="subject" placeholder="Subjek Anda" maxlength="200" required></label>
+                <label>Pesan<textarea name="message" placeholder="Pesan Anda" rows="6" maxlength="5000" required></textarea></label>
+                <button class="button button-primary contact-submit" type="submit">Kirim Pesan <i class="bi bi-send-fill"></i></button>
+            </form>
+        </div>
+    </div>
+</section>

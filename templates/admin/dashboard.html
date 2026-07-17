@@ -1,0 +1,34 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Dashboard | Admin Jenny{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div><span class="eyebrow">Ringkasan</span><h1>Dashboard</h1></div>
+    <a class="admin-button" href="{{ url_for('main.home') }}" target="_blank"><i class="bi bi-eye"></i> Preview Website</a>
+</div>
+<div class="metric-grid">
+    <article><span class="metric-icon"><i class="bi bi-stars"></i></span><div><strong>{{ metrics.skills }}</strong><p>Keahlian</p></div></article>
+    <article><span class="metric-icon"><i class="bi bi-briefcase"></i></span><div><strong>{{ metrics.experiences }}</strong><p>Pengalaman</p></div></article>
+    <article><span class="metric-icon"><i class="bi bi-folder"></i></span><div><strong>{{ metrics.projects }}</strong><p>Proyek</p></div></article>
+    <article><span class="metric-icon"><i class="bi bi-envelope"></i></span><div><strong>{{ metrics.unread_messages }}</strong><p>Pesan Belum Dibaca</p></div></article>
+</div>
+<div class="dashboard-grid">
+    <section class="admin-panel">
+        <div class="panel-header"><div><h2>Pesan Terbaru</h2><p>Pesan yang baru masuk dari form kontak.</p></div><a href="{{ url_for('admin.messages') }}">Lihat semua</a></div>
+        <div class="message-list compact">
+            {% for message in latest_messages %}
+                <article class="message-row {{ '' if message.is_read else 'unread' }}">
+                    <span class="avatar">{{ message.name[:1]|upper }}</span>
+                    <div><strong>{{ message.name }}</strong><p>{{ message.subject }}</p></div>
+                    <time>{{ message.created_at.strftime('%d/%m/%Y') }}</time>
+                </article>
+            {% else %}<p class="empty-state">Belum ada pesan masuk.</p>{% endfor %}
+        </div>
+    </section>
+    <section class="admin-panel quick-panel">
+        <div class="panel-header"><div><h2>Aksi Cepat</h2><p>Perbarui bagian utama website.</p></div></div>
+        <a href="{{ url_for('profile.edit') }}"><i class="bi bi-person"></i><span><strong>Edit Profil</strong><small>Nama, foto, bio, dan sosial media</small></span></a>
+        <a href="{{ url_for('projects_admin.index') }}"><i class="bi bi-plus-circle"></i><span><strong>Tambah Proyek</strong><small>Publikasikan karya terbaru</small></span></a>
+        <a href="{{ url_for('experiences_admin.index') }}"><i class="bi bi-briefcase"></i><span><strong>Tambah Pengalaman</strong><small>Perbarui perjalanan profesional</small></span></a>
+    </section>
+</div>
+{% endblock %}
