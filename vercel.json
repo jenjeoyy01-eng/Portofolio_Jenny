@@ -3,7 +3,7 @@
   "framework": "flask",
   "functions": {
     "app.py": {
-      "includeFiles": "{templates/**,static/**,public/**}"
+      "includeFiles": "{templates/**,static/**}"
     }
   }
 }
