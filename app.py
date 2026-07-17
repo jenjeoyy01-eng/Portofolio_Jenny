@@ -14,12 +14,19 @@ from flask_wtf.csrf import CSRFProtect, CSRFError
 from config import Config
 from models import Admin, Experience, Profile, Project, Skill, db
 
+BASE_DIR = Path(__file__).resolve().parent
+
 login_manager = LoginManager()
 csrf = CSRFProtect()
 
 
 def create_app() -> Flask:
-    app = Flask(__name__)
+    app = Flask(
+        __name__,
+        template_folder=str(BASE_DIR / "templates"),
+        static_folder=str(BASE_DIR / "static"),
+        static_url_path="/static",
+    )
     app.config.from_object(Config)
 
     # Konfigurasi TLS untuk koneksi TiDB Cloud.
