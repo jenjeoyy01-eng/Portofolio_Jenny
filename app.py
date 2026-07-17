@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from datetime import datetime
+from pathlib import Path
 
+import certifi
 import click
 from flask import Flask, flash, redirect, request, url_for
 from flask_login import LoginManager
@@ -20,21 +22,28 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # TiDB Cloud mendukung verifikasi TLS melalui parameter PyMySQL berikut.
+    # Konfigurasi TLS untuk koneksi TiDB Cloud.
     if app.config["SQLALCHEMY_DATABASE_URI"].startswith("mysql+pymysql://"):
-        ca_path = app.config.get("TIDB_CA_PATH")
-        if ca_path:
-            engine_options = dict(app.config.get("SQLALCHEMY_ENGINE_OPTIONS", {}))
-            connect_args = dict(engine_options.get("connect_args", {}))
-            connect_args.update(
-                {
-                    "ssl_verify_cert": True,
-                    "ssl_verify_identity": True,
-                    "ssl_ca": ca_path,
-                }
-            )
-            engine_options["connect_args"] = connect_args
-            app.config["SQLALCHEMY_ENGINE_OPTIONS"] = engine_options
+        configured_ca = app.config.get("TIDB_CA_PATH")
+
+        # Gunakan file CA dari konfigurasi hanya jika benar-benar tersedia.
+        # Pada Vercel, path Windows tidak tersedia sehingga digunakan CA certifi.
+        if configured_ca and Path(configured_ca).is_file():
+            ca_path = configured_ca
+        else:
+            ca_path = certifi.where()
+
+        engine_options = dict(app.config.get("SQLALCHEMY_ENGINE_OPTIONS", {}))
+        connect_args = dict(engine_options.get("connect_args", {}))
+        connect_args.update(
+            {
+                "ssl_verify_cert": True,
+                "ssl_verify_identity": True,
+                "ssl_ca": ca_path,
+            }
+        )
+        engine_options["connect_args"] = connect_args
+        app.config["SQLALCHEMY_ENGINE_OPTIONS"] = engine_options
 
     db.init_app(app)
     login_manager.init_app(app)
