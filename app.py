@@ -10,9 +10,11 @@ import click
 from flask import Flask, flash, redirect, request, url_for
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect, CSRFError
+from jinja2 import ChoiceLoader, DictLoader, FileSystemLoader
 
 from config import Config
 from models import Admin, Experience, Profile, Project, Skill, db
+from template_bundle import TEMPLATES
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -28,6 +30,16 @@ def create_app() -> Flask:
         static_url_path="/static",
     )
     app.config.from_object(Config)
+
+    # Gunakan file template lokal jika tersedia dan bundle Python sebagai fallback.
+    # Fallback ini mencegah TemplateNotFound ketika folder templates tidak ikut
+    # ke filesystem Vercel Function.
+    app.jinja_loader = ChoiceLoader(
+        [
+            FileSystemLoader(str(BASE_DIR / "templates")),
+            DictLoader(TEMPLATES),
+        ]
+    )
 
     # Konfigurasi TLS untuk koneksi TiDB Cloud.
     if app.config["SQLALCHEMY_DATABASE_URI"].startswith("mysql+pymysql://"):

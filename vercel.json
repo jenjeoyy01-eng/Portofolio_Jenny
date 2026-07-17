@@ -1,9 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "flask",
-  "functions": {
-    "app.py": {
-      "includeFiles": "{templates/**,static/**}"
-    }
-  }
+  "framework": "flask"
 }
